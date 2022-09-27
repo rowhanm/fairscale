@@ -2436,11 +2436,11 @@ class FullyShardedDataParallel(nn.Module):
         # In PyTorch version 1.12, Adam's `step` state changed from an int to a singleton
         # tensor. We convert it back here. Otherwise, the step counter will be treated
         # like a singleton tensor and comparison with original state dict would fail.
-        for _, bufs in osd["state"].items():
-            if "step" in bufs.keys():
-                assert type(bufs["step"]) is int or ou.is_singleton_tensor(bufs["step"])
-                if ou.is_singleton_tensor(bufs["step"]):
-                    bufs["step"] = bufs["step"].item()
+        # for _, bufs in osd["state"].items():
+        #     if "step" in bufs.keys():
+        #         assert type(bufs["step"]) is int or ou.is_singleton_tensor(bufs["step"])
+        #         if ou.is_singleton_tensor(bufs["step"]):
+        #             bufs["step"] = bufs["step"].item()
         # Get uncollected_ids.
         uncollected_ids = [i for i, m in enumerate(get_fsdp_instances(self)) if m.no_broadcast_optim_state]
         new_state_value = {k: v for k, v in osd["state"].items() if k not in uncollected_ids}
